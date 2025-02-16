@@ -1,7 +1,7 @@
 # Where are all the schema files located? globs are supported eg  src/**/*.graphqls
 schema:
   - graph/*.graphqls
-  # - graph/federation.graphql
+  - graph/federation.graphql
 
 # Where should the generated server code go?
 exec:
@@ -19,12 +19,12 @@ exec:
   # worker_limit: 1000
 
 # Uncomment to enable federation
-# federation:
-#   filename: graph/federation.go
-#   package: graph
-#   version: 2
-#   options:
-#     computed_requires: true
+federation:
+  filename: graph/federation.go
+  package: graph
+  version: 2
+  options:
+    computed_requires: true
 
 # Where should any generated models go?
 model:

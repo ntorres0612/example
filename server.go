@@ -12,6 +12,8 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler/lru"
 	"github.com/99designs/gqlgen/graphql/handler/transport"
 	"github.com/99designs/gqlgen/graphql/playground"
+	"github.com/labstack/echo"
+	"github.com/labstack/echo/middleware"
 	"github.com/vektah/gqlparser/v2/ast"
 )
 
@@ -44,9 +46,30 @@ func main() {
 		Cache: lru.New[string](100),
 	})
 
-	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
-	http.Handle("/query", srv)
+	// http.Handle("/", playground.Handler("GraphQL playground", "/query"))
 
-	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
-	log.Fatal(http.ListenAndServe(":"+port, nil))
+	// http.Handle("/query", c.Handler(srv))
+
+	// log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
+	// log.Fatal(http.ListenAndServe(":"+port, nil))
+
+	e := echo.New()
+
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
+
+	e.GET("/", func(c echo.Context) error {
+		return c.String(http.StatusOK, "Welcome!")
+	})
+	e.POST("/query", func(c echo.Context) error {
+		srv.ServeHTTP(c.Response(), c.Request())
+		return nil
+	})
+
+	e.GET("/playground", func(c echo.Context) error {
+		playground.Handler("GraphQL", "/query").ServeHTTP(c.Response(), c.Request())
+		return nil
+	})
+
+	e.Logger.Fatal(e.Start(":" + port))
 }

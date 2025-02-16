@@ -39,6 +39,8 @@
 #   reviews: [Review]
 # }
 
+
+
 type Todo {
   id: ID!
   text: String!
@@ -52,4 +54,9 @@ type Query {
 
 type Mutation {
   createTodo(text: String!, done: Boolean!, userId: String!): Todo!
+}
+
+type User @key(fields: "id") {
+  id: ID!
+  username: String!
 }
