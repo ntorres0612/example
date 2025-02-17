@@ -14,11 +14,14 @@ import (
 func mutateHook(b *modelgen.ModelBuild) *modelgen.ModelBuild {
 	for _, model := range b.Models {
 		for _, field := range model.Fields {
-			name := field.Name
-			if name == "id" {
-				name = "_id"
+			// name := field.Name
+			// if name == "id" {
+			// 	name = "_id"
+			// }
+			// field.Tag += ` bson:"` + name + `,omitempty"`
+			if field.Name == "id" {
+				field.Tag += ` bson:"_id,omitempty"`
 			}
-			field.Tag += ` bson:"` + name + `,omitempty"`
 		}
 	}
 	return b

@@ -46,13 +46,6 @@ func main() {
 		Cache: lru.New[string](100),
 	})
 
-	// http.Handle("/", playground.Handler("GraphQL playground", "/query"))
-
-	// http.Handle("/query", c.Handler(srv))
-
-	// log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
-	// log.Fatal(http.ListenAndServe(":"+port, nil))
-
 	e := echo.New()
 
 	e.Use(middleware.Logger())
@@ -61,7 +54,9 @@ func main() {
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Welcome!")
 	})
+
 	e.POST("/query", func(c echo.Context) error {
+		c.Response().Header().Set("Content-Type", "application/json")
 		srv.ServeHTTP(c.Response(), c.Request())
 		return nil
 	})
