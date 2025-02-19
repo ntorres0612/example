@@ -2,6 +2,7 @@ package service
 
 import (
 	"user-backend/graph/model"
+	"user-backend/graph/utils"
 	"user-backend/repository"
 )
 
@@ -14,6 +15,12 @@ func NewCustomerService(repository *repository.MongoRepository) *UserService {
 }
 
 func (s *UserService) CreateUser(user *model.User) (*model.User, error) {
+
+	password, err := utils.PasswordHash(user.Password)
+	if err != nil {
+		return nil, err
+	}
+	user.Password = password
 	return s.repository.CreateUser(user)
 }
 
