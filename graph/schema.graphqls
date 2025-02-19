@@ -1,19 +1,38 @@
-type Todo {
+type User  {
   id: ID!
-  text: String!
-  done: Boolean!
-  userId: String!
+  username: String!
+  password: String!
+  customer: Customer!
+  affiliation: Affiliation!
+}
+extend type Customer @key(fields: "id") {
+  id: ID! @external
+}
+extend type Affiliation @key(fields: "id") {
+  id: ID! @external
 }
 
 type Query {
-  getTodos: [Todo!]!
+  getUsers: [User!]!
+  getUser(id: ID!): User
+}
+
+type Response {
+  status: Boolean!
+  message: String!
+}
+
+input UserInput {
+  id: ID
+  username: String!
+  password: String!
+  customer: String!
+  affiliation: String!
 }
 
 type Mutation {
-  createTodo(text: String!, done: Boolean!, userId: String!): Todo!
+  createUser(input: UserInput!): User!
+  updateUser(input: UserInput!): User!
+  deleteUser(id: ID!): Response!
 }
 
-type User @key(fields: "id") {
-  id: ID!
-  username: String!
-}

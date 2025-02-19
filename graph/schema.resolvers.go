@@ -6,28 +6,44 @@ package graph
 
 import (
 	"context"
-	"example/graph/model"
+	"fmt"
+	"user-backend/graph/model"
 )
 
-// CreateTodo is the resolver for the createTodo field.
-func (r *mutationResolver) CreateTodo(ctx context.Context, text string, done bool, userID string) (*model.Todo, error) {
-	todo := &model.Todo{
-		Text:   text,
-		Done:   done,
-		UserID: userID,
+func (r *mutationResolver) CreateUser(ctx context.Context, input model.UserInput) (*model.User, error) {
+	user := &model.User{
+		Username:    input.Username,
+		Password:    input.Password,
+		Customer:    &model.Customer{ID: input.Customer},
+		Affiliation: &model.Affiliation{ID: input.Affiliation},
 	}
 
-	err := r.DB.CreateTodo(todo)
+	userCreated, err := r.Service.CreateUser(user)
 	if err != nil {
 		return nil, err
 	}
 
-	return todo, nil
+	return userCreated, nil
 }
 
-// GetTodos is the resolver for the getTodos field.
-func (r *queryResolver) GetTodos(ctx context.Context) ([]*model.Todo, error) {
-	return r.DB.GetTodos()
+// UpdateUser is the resolver for the updateUser field.
+func (r *mutationResolver) UpdateUser(ctx context.Context, input model.UserInput) (*model.User, error) {
+	panic(fmt.Errorf("not implemented: UpdateUser - updateUser"))
+}
+
+// DeleteUser is the resolver for the deleteUser field.
+func (r *mutationResolver) DeleteUser(ctx context.Context, id string) (*model.Response, error) {
+	panic(fmt.Errorf("not implemented: DeleteUser - deleteUser"))
+}
+
+// GetUsers is the resolver for the getUsers field.
+func (r *queryResolver) GetUsers(ctx context.Context) ([]*model.User, error) {
+	return r.Service.GetUsers()
+}
+
+// GetUser is the resolver for the getUser field.
+func (r *queryResolver) GetUser(ctx context.Context, id string) (*model.User, error) {
+	panic(fmt.Errorf("not implemented: GetUser - getUser"))
 }
 
 // Mutation returns MutationResolver implementation.

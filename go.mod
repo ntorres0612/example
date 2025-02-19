@@ -1,4 +1,4 @@
-module example
+module user-backend
 
 go 1.23.1
 

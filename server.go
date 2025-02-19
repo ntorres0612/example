@@ -1,11 +1,12 @@
 package main
 
 import (
-	"example/graph"
-	"example/repository"
 	"log"
 	"net/http"
 	"os"
+	"user-backend/graph"
+	"user-backend/graph/service"
+	"user-backend/repository"
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/handler/extension"
@@ -17,7 +18,7 @@ import (
 	"github.com/vektah/gqlparser/v2/ast"
 )
 
-const defaultPort = "8080"
+const defaultPort = "8081"
 
 func main() {
 	port := os.Getenv("PORT")
@@ -25,14 +26,13 @@ func main() {
 		port = defaultPort
 	}
 
-	// mongoURI := "mongodb://localhost:27017/?replicaSet=rs0"
-
-	// Inicializar la BD con MongoDB
 	db, err := repository.NewMongoRepository("mongodb://localhost:27017")
 	if err != nil {
 		log.Fatal("❌ Error al conectar con MongoDB:", err)
 	}
-	resolver := &graph.Resolver{DB: db}
+	service := service.NewCustomerService(db)
+
+	resolver := &graph.Resolver{Service: service}
 	srv := handler.New(graph.NewExecutableSchema(graph.Config{Resolvers: resolver}))
 
 	srv.AddTransport(transport.Options{})

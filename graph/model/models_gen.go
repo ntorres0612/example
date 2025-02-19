@@ -2,22 +2,41 @@
 
 package model
 
+type Affiliation struct {
+	ID string `json:"id" bson:"_id,omitempty"`
+}
+
+func (Affiliation) IsEntity() {}
+
+type Customer struct {
+	ID string `json:"id" bson:"_id,omitempty"`
+}
+
+func (Customer) IsEntity() {}
+
 type Mutation struct {
 }
 
 type Query struct {
 }
 
-type Todo struct {
-	ID     string `json:"id" bson:"_id,omitempty"`
-	Text   string `json:"text" bson:"text,omitempty"`
-	Done   bool   `json:"done" bson:"done,omitempty"`
-	UserID string `json:"userId" bson:"userId,omitempty"`
+type Response struct {
+	Status  bool   `json:"status" bson:"status,omitempty"`
+	Message string `json:"message" bson:"message,omitempty"`
 }
 
 type User struct {
-	ID       string `json:"id" bson:"_id,omitempty"`
-	Username string `json:"username" bson:"username,omitempty"`
+	ID          string       `json:"id" bson:"_id,omitempty"`
+	Username    string       `json:"username" bson:"username,omitempty"`
+	Password    string       `json:"password" bson:"password,omitempty"`
+	Customer    *Customer    `json:"customer" bson:"customer,omitempty"`
+	Affiliation *Affiliation `json:"affiliation" bson:"affiliation,omitempty"`
 }
 
-func (User) IsEntity() {}
+type UserInput struct {
+	ID          *string `json:"id,omitempty"`
+	Username    string  `json:"username" bson:"username,omitempty"`
+	Password    string  `json:"password" bson:"password,omitempty"`
+	Customer    string  `json:"customer" bson:"customer,omitempty"`
+	Affiliation string  `json:"affiliation" bson:"affiliation,omitempty"`
+}
